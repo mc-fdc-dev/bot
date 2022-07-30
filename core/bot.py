@@ -3,6 +3,9 @@ import discord
 
 from aiomysql import create_pool
 
+import os
+
+
 class FdcBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         self.mysql = kwargs.pop("mysql")
@@ -18,3 +21,5 @@ class FdcBot(commands.Bot):
 
     async def setup_hook(self) -> None:
         self.pool = create_pool(**self.mysql)
+        for cog in os.listdir("cogs"):
+            await self.load_extension(cog[:-2])
