@@ -7,6 +7,10 @@ from typing import Any, List
 
 class Cog(commands.Cog):
     
+    @property
+    def acquire(self) -> Any:
+        return self.bot.acquire
+    
     async def execute(self, *args, cursor: Cursor | None = None, **kwargs) -> None:
         if cursor is None:
             async with self.bot.acquire() as connection:
