@@ -14,12 +14,12 @@ class TextColumn(BaseColumn):
     type = int()
 
 class Table:
-    def __init_subclass_(cls, tablename: str | None = None
-                        ):
+    def __init_subclass_(cls, tablename: str | None = None):
         self.tablename = cls.__name__ if self.tablename is None else self.tablename
         self.columns = {}
         for name, value in getmembers(cls):
             self.columns[name] = value
         super().__init_subclass__()
 
-    async def insert
+    async def insert(self, **kwargs) -> None:
+        
