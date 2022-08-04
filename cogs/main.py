@@ -21,7 +21,7 @@ class Main(Cog):
                 else:
                     await self.execute(
                         "UPDATE Prefix SET Prefix = %s WHERE GuildId = %s;", (prefix, ctx.guild.id),
-                        cursor
+                        cursor=cur
                     )
         await ctx.reply("設定したよ❤")
 

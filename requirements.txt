@@ -3,3 +3,5 @@ jishaku
 aiohttp
 pynacl
 orjson
+aiomysql
+tweepy

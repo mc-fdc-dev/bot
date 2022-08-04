@@ -10,6 +10,7 @@ class FdcBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         self.mysql = kwargs.pop("mysql")
         kwargs["command_prefix"] = self._command_prefix
+        kwargs["intents"] = discord.Intents.all()
         self.prefixes = {}
         super().__init__(*args, **kwargs)
 
@@ -18,8 +19,8 @@ class FdcBot(commands.Bot):
             return self.prefixes[message.guild.id]
         else:
             return "fb."
-
+            
     async def setup_hook(self) -> None:
-        self.pool = create_pool(**self.mysql)
+        self.pool = await create_pool(**self.mysql)
         for cog in os.listdir("cogs"):
             await self.load_extension(cog[:-2])
