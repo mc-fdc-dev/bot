@@ -5,9 +5,13 @@ import tweepy
 
 import asyncio
 
-from core import Cog
+from core import Cog, sql
 from data import CONFIG
 
+
+class TwitterAccount2(sql.Table):
+    Userid = sql.BigintColumn()
+    Token = sql.TextColumn()
 
 class Twitter(Cog):
     TWITTER_API_KEY = CONFIG["twitter"]["api_key"]
@@ -18,6 +22,17 @@ class Twitter(Cog):
             self.TWITTER_API_KEY, self.TWITTER_API_SECRET,
             callback="oob"
         )
+        self.table = TwitterAccount2()
+
+    async def cog_load(self) -> None:
+        await self.table.create(self.bot.pool)
+        async with self.bot.pool.acquire() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute("""CREATE TABLE IF NOT EXISTS TwitterAccount(
+                    User BIGINT,
+                    ApiKey TEXT,
+                    ApiSecret TEXT
+                );""")
 
     @commands.group()
     async def twitter(self, ctx):
@@ -39,8 +54,20 @@ class Twitter(Cog):
                 check=lambda m: m.author == ctx.author and m.channel == channel,
                 timeout=180
             )
+            access_token, access_token_secret = self.oauth1_user_handler.get_access_token(
+                message.content
+            )
+            await self.execute(
+                "INSERT INTO TwitterAccount VALUES(%s, %s, %s);",
+                (ctx.author.id, access_token, access_token_secret)
+            )
+            await channel.send(f"access_token: {access_token}\naccess_token_secret: {access_token_secret}")
         except asyncio.TimeoutError:
             await channel.send(embed=discord.Embed(
                 title="twitterログイン",
                 description="時間切れ"
             ))
+
+
+async def setup(bot):
+    await bot.add_cog(Twitter(bot))

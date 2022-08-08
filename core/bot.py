@@ -5,22 +5,30 @@ from aiomysql import create_pool
 
 import os
 
+from data import CONFIG
 
-class FdcBot(commands.Bot):
+
+class FdcApp(commands.Bot):
     def __init__(self, *args, **kwargs):
-        self.mysql = kwargs.pop("mysql")
         kwargs["command_prefix"] = self._command_prefix
         kwargs["intents"] = discord.Intents.all()
         self.prefixes = {}
         super().__init__(*args, **kwargs)
 
-    def _command_prefix(self, message: discord.Message) -> str:
+    def _command_prefix(self, _, message: discord.Message) -> str:
         if message.guild.id in self.prefixes:
             return self.prefixes[message.guild.id]
         else:
             return "fb."
+
+    async def on_message(self, message: discord.Message) -> None:
+        if isinstance(message.channel, discord.DMChannel):
+            return
+        await self.process_commands(message)
             
     async def setup_hook(self) -> None:
-        self.pool = await create_pool(**self.mysql)
+        self.pool = await create_pool(**CONFIG["mysql"])
         for cog in os.listdir("cogs"):
-            await self.load_extension(cog[:-2])
+            if cog.startswith("__"):
+                continue
+            await self.load_extension("cogs." + cog[:-3])

@@ -1,14 +1,13 @@
-from core import FdcBot
+from core import FdcApp
 import json
 
+from data import CONFIG
 
-with open("config.json", "r") as f:
-    config = json.load(f)
-bot = FdcBot(mysql=config["mysql"])
+bot = FdcApp()
 
 @bot.event
 async def on_ready():
     print("Bot is ready")
     await bot.load_extension("jishaku")
 
-bot.run(config["token"])
+bot.run(CONFIG["token"])

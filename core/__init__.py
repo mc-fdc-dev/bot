@@ -1,5 +1,5 @@
-from .bot import FdcBot
+from .bot import FdcApp
 from .cog import Cog
 
 
-__all__ = ("FdcBot", "Cog")
+__all__ = ("FdcApp", "Cog")

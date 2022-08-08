@@ -1,12 +1,14 @@
-from core import Cog, FdcDev
+from core import Cog, FdcApp
 
 
 class Main(Cog):
-    def __init__(self, bot: FdcDev):
+    def __init__(self, bot: FdcApp):
         self.bot = bot
 
     async def cog_load(self) -> None:
-        await self.execute("CREATE TABLE IF NOT EXISTS Prefix(GuildId BIGINT, Prefix TEXT);")
+        async with self.acquire() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute("CREATE TABLE IF NOT EXISTS Prefix(GuildId BIGINT, Prefix TEXT);")
     
     @Cog.command()
     async def prefix(self, ctx, prefix: str = "fd:"):
@@ -25,5 +27,5 @@ class Main(Cog):
                     )
         await ctx.reply("設定したよ❤")
 
-async def setup(bot: FdcDev) -> None:
+async def setup(bot: FdcApp) -> None:
     await bot.add_cog(Main(bot))
