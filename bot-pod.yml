@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
     - name: fdcapp
-      image: fdcapp:latest
+      image: fdcapp
       resources:
         limits:
           cpu: 0.5
