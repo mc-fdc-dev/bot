@@ -1,7 +1,6 @@
-discord.py
+discord.py[voice,speed]
 jishaku
 aiohttp
-pynacl
 orjson
 aiomysql
 tweepy
