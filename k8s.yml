@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
     - name: fdcapp
-      image: fdcapp
+      image: fdcapp:latest
       imagePullPolicy: Never
       resources:
         limits:
