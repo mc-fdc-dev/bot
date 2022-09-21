@@ -4,9 +4,15 @@ metadata:
   name: fdcapp
 spec:
   containers:
-    - name: fdcapp
-      image: fdcapp:latest
-      imagePullPolicy: Never
-      resources:
-        limits:
-          cpu: 0.5
+  - name: fdcapp
+    image: fdcapp:latest
+    imagePullPolicy: Never
+    resources:
+      limits:
+        cpu: 0.5
+    volumeMounts:
+      - mountPath: /usr/src/app
+        name: fdcapp-volume
+  volumes:
+  - name: fdcapp-volume
+    emptyDir: {}
