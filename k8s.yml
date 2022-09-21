@@ -6,6 +6,7 @@ spec:
   containers:
     - name: fdcapp
       image: fdcapp
+      imagePullPolicy: Never
       resources:
         limits:
           cpu: 0.5
