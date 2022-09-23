@@ -28,6 +28,7 @@ class FdcApp(commands.Bot):
             
     async def setup_hook(self) -> None:
         self.pool = await create_pool(**CONFIG["mysql"])
+        print("Connect to database")
         for cog in os.listdir("cogs"):
             if cog.startswith("__"):
                 continue
